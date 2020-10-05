@@ -1,0 +1,47 @@
+No      | English               | Vietnamese 
+1	| Banana    		| chuối     
+2	| Bliss     		| niềm vui sướng vô bờ
+3	| Blossom   		| sự hứa hẹn, triển vọng
+4	| Blue      		| màu thiên thanh
+5	| Bubble    		| bong bóng 
+6	| Bumblebee 		| con ong   
+7	| Butterfly 		| bươm bướm, sự kiêu sa
+8	| Cherish   		| yêu thương
+9	| Cosmopolitan		| vũ trụ    
+10	| Cosy      		| ấm cúng   
+11	| Cute      		| xinh xắn đáng yêu
+12	| Cute      		| dễ thương 
+13	| Destiny   		| số phận, định mệnh
+14	| Enthusiasm		| sự hăng hái, nhiệt tình
+15	| Eternity  		| sự bất diệt, vĩnh cửu
+16	| Fantastic 		| xuất sắc, tuyệt vời
+17	| Freedom   		| sự tự do  
+18	| Gorgeous  		| lộng lẫy, huy hoàng
+19	| Grace     		| sự duyên dáng
+20	| Hope      		| sự hy vọng
+21	| Kangaroo  		| chuột túi 
+22	| Liberty   		| quyền tự do
+23	| Love      		| tình yêu  
+24	| Lullaby   		| bài hát ru con, sự dỗ dành
+25	| Mother    		| người mẹ, tình mẫu tử
+26	| Paradox   		| nghịch lý 
+27	| Passion   		| tình cảm, cảm xúc
+28	| Peace     		| sự hoà bình
+29	| Peek-a-boo		| trốn tìm  
+30	| Pumpkin   		| bí ngô    
+31	| Rainbow   		| cầu vồng, sự may mắn
+32	| Renaissance		| sự phục hưng
+33	| Sentiment 		| tình cảm  
+34	| Serendipity		| sự tình cờ, may mắn
+35	| Smile     		| nụ cười thân thiện
+36	| Sophisticated		| sự tinh vi
+37	| Sunflower 		| hoa hướng dương
+38	| Sunshine  		| ánh nắng, sự hân hoan
+39	| Sweetheart		| người yêu dấu
+40	| Tranquility		| sự bình yên
+41	| Transform 		| thay đổi, biến đổi
+42	| Transit   		| sự đi qua, sự vượt qua
+43	| Translate 		| Dịch      
+44	| Transport 		| Vận chuyển
+45	| Twinkle   		| sự long lanh
+46	| Umbrella  		| ô, dù     
