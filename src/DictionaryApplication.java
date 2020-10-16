@@ -1,0 +1,468 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * @author ADMIN
+ */
+public class DictionaryApplication extends javax.swing.JFrame {
+
+    /**
+     * Creates new form DictionaryApplication
+     */
+    DefaultListModel listModel;
+    ArrayList<Word> Words = new ArrayList<>();
+    Map<String, String> vnmeses = new HashMap<>();
+
+    public DictionaryApplication() throws IOException {
+        Words.sort(Comparator.comparing(t -> t.word_target));
+        initComponents();
+        listModel = new DefaultListModel<>();
+        InitData();
+    }
+
+    private void InitData() throws IOException {
+        insertFromFileExpand();
+        //Words.sort(Comparator.comparing(t -> t.word_target));
+        for (Word word : Words) {
+            listModel.addElement(word.word_target);
+        }
+        jList1.setModel(listModel);
+    }
+
+    private void searchFilter(String searchTerm) {
+        DefaultListModel filteredItems = new DefaultListModel();
+        Words.forEach((word) -> {
+            String new_word = word.toString().toLowerCase();
+            if (new_word.contains(searchTerm.toLowerCase())) {
+                word.word_target = new_word;
+                filteredItems.addElement(word.word_target);
+                vnmeses.put(word.word_target, word.word_explain);
+            }
+        });
+        listModel = filteredItems;
+        jList1.setModel(listModel);
+    }
+
+    public void selectlist(String text) {
+        int size = jList1.getModel().getSize();
+        int index = binsearch(jList1, text, size);
+        if (index != -1) {
+            jList1.setSelectedIndex(index);
+            jList1.ensureIndexIsVisible(index);
+        } else {
+            System.out.println("Not found");
+        }
+    }
+
+    public int binsearch(JList list, String target, int n) {
+        int i;
+        int pos = -1;
+        int found = 0;
+        Object item = list.getModel().getElementAt(n / 2);
+        String itemstr = (String) item;
+        if (itemstr.length() <= target.length())
+            itemstr = itemstr.concat("");
+        if (target.compareTo(itemstr.substring(0, target.length())) <= 0) {
+            for (i = 0; i <= n / 2; i++) {
+                item = list.getModel().getElementAt(i);
+                itemstr = (String) item;
+                if (itemstr.length() >= target.length()) {
+                    if (target.compareTo(itemstr.substring(0, target.length())) == 0) {
+                        pos = i;
+                        break;
+                    }
+                }
+            }
+        } else {
+            for (i = n / 2 + 1; i < n; i++) {
+                item = list.getModel().getElementAt(i);
+                itemstr = (String) item;
+                if (itemstr.length() >= target.length()) {
+                    if (target.compareTo(itemstr.substring(0, target.length())) == 0) {
+                        pos = i;
+                        break;
+                    }
+                }
+            }
+        }
+        return pos;
+    }
+
+    public void insertFromFileExpand() throws IOException {
+        Scanner input = new Scanner(Paths.get("DictionariesExpand.txt"),
+                "UTF-8");
+        while (input.hasNextLine()) {
+            StringBuilder s = new StringBuilder();
+            int count = 0;
+            while (input.hasNextLine() && count != 100) {
+                String a = input.nextLine();
+                if (a.equals("")) {
+                    count++;
+                }
+                s.append(a).append("\n");
+            }
+            String[] onePart = s.toString().split("@");
+            for (String value : onePart) {
+                Word new_word = new Word();
+                String[] Line = value.split("/");
+                if (Line.length == 3) {
+                    new_word.word_target = Line[0];
+                    new_word.word_explain = "/" + Line[1] + "/" + Line[2];
+                    Words.add(new_word);
+                    vnmeses.put(new_word.word_target, new_word.word_explain);
+                } else if (Line.length == 4) {
+                    new_word.word_target = Line[0];
+                    new_word.word_explain = "/" + Line[1] + "/" + Line[2] + "/n" + Line[3];
+                    Words.add(new_word);
+                    vnmeses.put(new_word.word_target, new_word.word_explain);
+                }
+            }
+        }
+        input.close();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private void initComponents() {
+
+        jFrame2 = new javax.swing.JFrame();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        JLabel jLabel2 = new JLabel();
+        JLabel jLabel4 = new JLabel();
+        JButton jButton3 = new JButton();
+        jFrame1 = new javax.swing.JFrame();
+        jTextField5 = new javax.swing.JTextField();
+        JLabel jLabel6 = new JLabel();
+        JButton jButton6 = new JButton();
+        JScrollPane jScrollPane1 = new JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jTextField1 = new javax.swing.JTextField();
+        JLabel jLabel3 = new JLabel();
+        JScrollPane jScrollPane2 = new JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        // Variables declaration - do not modify
+        JButton jButton1 = new JButton();
+        JLabel jLabel1 = new JLabel();
+        JMenuBar jMenuBar1 = new JMenuBar();
+        JMenu jMenu1 = new JMenu();
+        JMenuItem jMenuItem1 = new JMenuItem();
+        JMenuItem jMenuItem2 = new JMenuItem();
+        JMenuItem jMenuItem3 = new JMenuItem();
+
+        jFrame2.setTitle("Add ");
+        jFrame2.setResizable(false);
+
+        jLabel2.setText("English");
+
+        jLabel4.setText("VIetnamese");
+
+        jButton3.setText("Add");
+        jButton3.addActionListener(evt -> jButton3ActionPerformed());
+
+        javax.swing.GroupLayout jFrame2Layout = new javax.swing.GroupLayout(jFrame2.getContentPane());
+        jFrame2.getContentPane().setLayout(jFrame2Layout);
+        jFrame2Layout.setHorizontalGroup(
+                jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jFrame2Layout.createSequentialGroup()
+                                .addGroup(jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                .addGroup(jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(26, 26, 26))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jFrame2Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(145, 145, 145))
+        );
+        jFrame2Layout.setVerticalGroup(
+                jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jFrame2Layout.createSequentialGroup()
+                                .addGap(67, 67, 67)
+                                .addGroup(jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                                .addGroup(jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(25, 25, 25)
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jFrame1.setTitle("Fix");
+        jFrame1.setResizable(false);
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("New Word");
+        jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jButton6.setText("Fix");
+        jButton6.addActionListener(evt -> jButton6ActionPerformed());
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+                jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jFrame1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(128, 128, 128))
+                        .addGroup(jFrame1Layout.createSequentialGroup()
+                                .addGap(140, 140, 140)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(142, Short.MAX_VALUE))
+                        .addComponent(jTextField5)
+        );
+        jFrame1Layout.setVerticalGroup(
+                jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jFrame1Layout.createSequentialGroup()
+                                .addGap(31, 31, 31)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Dictionary");
+
+        jList1.setFont(new java.awt.Font("Arial", Font.BOLD, 12)); // NOI18N
+        jList1.addListSelectionListener(evt -> jList1ValueChanged());
+        jScrollPane1.setViewportView(jList1);
+
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased();
+            }
+        });
+
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setFont(new java.awt.Font("Arial", Font.BOLD | Font.ITALIC, 36)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 255));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Vietnamese");
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Arial", Font.BOLD, 14)); // NOI18N
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
+
+        jButton1.setIcon(new javax.swing.ImageIcon("image\\speaker1.gif")); // NOI18N
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jButton1MouseReleased();
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Arial", Font.BOLD | Font.ITALIC, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("English");
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jMenu1.setText("Menu");
+
+        jMenuItem1.setIcon(new javax.swing.ImageIcon("image\\Add.png")); // NOI18N
+        jMenuItem1.setText("Add");
+        jMenuItem1.addActionListener(evt -> jMenuItem1ActionPerformed());
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setIcon(new javax.swing.ImageIcon("image\\Edit.png")); // NOI18N
+        jMenuItem2.setText("Fix");
+        jMenuItem2.addActionListener(evt -> jMenuItem2ActionPerformed());
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem3.setIcon(new javax.swing.ImageIcon("image\\Delete.png")); // NOI18N
+        jMenuItem3.setText("Delete");
+        jMenuItem3.addActionListener(evt -> jMenuItem3ActionPerformed());
+        jMenu1.add(jMenuItem3);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jScrollPane1)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+                                                .addContainerGap())
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                .addComponent(jButton1))
+                                        .addComponent(jScrollPane2)))
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane2))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>
+
+    private void jList1ValueChanged() {
+        // TODO add your handling code here:
+        Word new_word = new Word();
+        new_word.word_target = jList1.getSelectedValue();
+        String s = vnmeses.get(new_word.word_target);
+        jTextArea1.setText(s);
+    }
+
+    private void jTextField1KeyReleased() {
+        // TODO add your handling code here:
+        //searchFilter(jTextField1.getText());
+        selectlist(jTextField1.getText());
+    }
+
+    private static final String VOICENAME = "kevin16";
+
+    private void jButton1MouseReleased() {
+        // TODO add your handling code here:
+        Voice voice;
+        VoiceManager vm = VoiceManager.getInstance();
+        voice = vm.getVoice(VOICENAME);
+        voice.allocate();
+        try {
+            voice.speak(jList1.getSelectedValue());
+        } catch (Exception ignored) {
+        }
+
+    }
+
+    private void jButton3ActionPerformed() {
+        // TODO add your handling code here:
+        Word new_word = new Word();
+        new_word.word_target = jTextField3.getText();
+        new_word.word_explain = jTextField2.getText();
+        int index = Collections.binarySearch(Words, new_word,
+                (w1, w2) -> w1.word_target.compareToIgnoreCase(w2.word_target));
+        //Words.add(-index-1, new_word);
+        vnmeses.put(new_word.word_target, new_word.word_explain);
+        listModel.add(-index - 1, new_word.word_target);
+        jList1.setModel(listModel);
+    }
+
+    private void jButton6ActionPerformed() {
+        // TODO add your handling code here:
+        Word new_word = new Word();
+        new_word.word_target = jList1.getSelectedValue();
+        String s = vnmeses.get(new_word.word_target);
+        int index = jList1.getSelectedIndex();
+        if (index != -1) {
+            listModel.remove(index);
+        }
+        new_word.word_target = jTextField5.getText();
+        new_word.word_explain = s;
+        vnmeses.put(new_word.word_target, new_word.word_explain);
+        listModel.add(index, new_word.word_target);
+        jList1.setModel(listModel);
+
+    }
+
+    private void jMenuItem1ActionPerformed() {
+        // TODO add your handling code here:
+        jFrame2.pack();
+        jFrame2.setVisible(true);
+    }
+
+    private void jMenuItem2ActionPerformed() {
+        // TODO add your handling code here:
+        jFrame1.pack();
+        jFrame1.setVisible(true);
+    }
+
+    private void jMenuItem3ActionPerformed() {
+        // TODO add your handling code here:
+        int index = jList1.getSelectedIndex();
+        if (index != -1) {
+            listModel.remove(index);
+        }
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DictionaryApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new DictionaryApplication().setVisible(true);
+            } catch (IOException ex) {
+                Logger.getLogger(DictionaryApplication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+
+    private javax.swing.JFrame jFrame1;
+    private javax.swing.JFrame jFrame2;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField5;
+    // End of variables declaration
+
+
+}
