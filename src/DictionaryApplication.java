@@ -513,7 +513,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
         new_word.word_explain = jTextArea4.getText();
         int index = Collections.binarySearch(Words, new_word,
                 (w1, w2) -> w1.word_target.compareToIgnoreCase(w2.word_target));
-        //Words.add(-index-1, new_word);
+        Words.add(-index - 1, new_word);
         vnmeses.put(new_word.word_target, new_word.word_explain);
         listModel.add(-index - 1, new_word.word_target);
         jList1.setModel(listModel);
@@ -523,15 +523,25 @@ public class DictionaryApplication extends javax.swing.JFrame {
         // TODO add your handling code here:
         Word new_word = new Word();
         new_word.word_target = jList1.getSelectedValue();
+        String u = jList1.getSelectedValue();
         String s = vnmeses.get(new_word.word_target);
         int index = jList1.getSelectedIndex();
-        if (index != -1) {
-            listModel.remove(index);
+        int count = 0;
+        for (int i = 0; i < Words.size(); i++) {
+            if (u.equals(Words.get(i).word_target)) {
+                count = i;
+                break;
+            }
         }
+        Words.remove(count);
+        listModel.remove(index);
         new_word.word_target = jTextField5.getText();
         new_word.word_explain = s;
+        int index1 = Collections.binarySearch(Words, new_word,
+                (w1, w2) -> w1.word_target.compareToIgnoreCase(w2.word_target));
+        Words.add(-index1 - 1, new_word);
         vnmeses.put(new_word.word_target, new_word.word_explain);
-        listModel.add(index, new_word.word_target);
+        listModel.add(-index1 - 1, new_word.word_target);
         jList1.setModel(listModel);
 
     }
@@ -551,9 +561,17 @@ public class DictionaryApplication extends javax.swing.JFrame {
     private void jMenuItem3ActionPerformed() {
         // TODO add your handling code here:
         int index = jList1.getSelectedIndex();
-        if (index != -1) {
-            listModel.remove(index);
+        String s = jList1.getSelectedValue();
+        int count = 0;
+        for (int i = 0; i < Words.size(); i++) {
+            if (s.equals(Words.get(i).word_target)) {
+                count = i;
+                break;
+            }
         }
+        Words.remove(count);
+        listModel.remove(index);
+        jList1.setModel(listModel);
     }
 
     private void jMenuItem4ActionPerformed() {
