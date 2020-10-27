@@ -4,11 +4,13 @@
  * and open the template in the editor.
  */
 
+
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
@@ -70,7 +72,6 @@ public class DictionaryApplication extends javax.swing.JFrame {
     public int binsearch(JList list, String target, int n) {
         int i;
         int pos = -1;
-        int found = 0;
         Object item = list.getModel().getElementAt(n / 2);
         String itemstr = (String) item;
         if (itemstr.length() <= target.length())
@@ -134,6 +135,21 @@ public class DictionaryApplication extends javax.swing.JFrame {
         input.close();
     }
 
+    public void outToFile() {
+        try {
+            FileWriter f = new FileWriter("DictionariesExpand.txt");
+            for (Word word : Words) {
+                f.write("@" + word.word_target);
+                f.write("");
+                f.write(word.word_explain);
+                f.write("\n");
+            }
+            f.close();
+        } catch (Exception e) {
+            System.out.println("Loi ghi file: " + e);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -188,6 +204,8 @@ public class DictionaryApplication extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(51, 255, 255));
 
+        jTextField3.setFont(new java.awt.Font("Arial", Font.BOLD, 14)); // NOI18N
+
         jLabel2.setFont(new java.awt.Font("Arial", Font.BOLD | Font.ITALIC, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("English");
@@ -197,9 +215,11 @@ public class DictionaryApplication extends javax.swing.JFrame {
         jLabel4.setText("VIetnamese");
 
         jTextArea4.setColumns(20);
+        jTextArea4.setFont(new java.awt.Font("Arial", Font.BOLD, 14)); // NOI18N
         jTextArea4.setRows(5);
         jScrollPane5.setViewportView(jTextArea4);
 
+        jButton3.setFont(new java.awt.Font("Arial", Font.BOLD | Font.ITALIC, 14)); // NOI18N
         jButton3.setText("Add");
         jButton3.addActionListener(evt -> jButton3ActionPerformed());
 
@@ -260,6 +280,8 @@ public class DictionaryApplication extends javax.swing.JFrame {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("New Word");
         jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jTextField5.setFont(new java.awt.Font("Arial", Font.BOLD, 14)); // NOI18N
 
         jButton6.setFont(new java.awt.Font("Arial Black", Font.ITALIC, 14)); // NOI18N
         jButton6.setText("Fix");
@@ -517,6 +539,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
         vnmeses.put(new_word.word_target, new_word.word_explain);
         listModel.add(-index - 1, new_word.word_target);
         jList1.setModel(listModel);
+        outToFile();
     }
 
     private void jButton6ActionPerformed() {
@@ -537,13 +560,11 @@ public class DictionaryApplication extends javax.swing.JFrame {
         listModel.remove(index);
         new_word.word_target = jTextField5.getText();
         new_word.word_explain = s;
-        int index1 = Collections.binarySearch(Words, new_word,
-                (w1, w2) -> w1.word_target.compareToIgnoreCase(w2.word_target));
-        Words.add(-index1 - 1, new_word);
+        Words.add(count, new_word);
         vnmeses.put(new_word.word_target, new_word.word_explain);
-        listModel.add(-index1 - 1, new_word.word_target);
+        listModel.add(count, new_word.word_target);
         jList1.setModel(listModel);
-
+        outToFile();
     }
 
     private void jMenuItem1ActionPerformed() {
@@ -572,6 +593,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
         Words.remove(count);
         listModel.remove(index);
         jList1.setModel(listModel);
+        outToFile();
     }
 
     private void jMenuItem4ActionPerformed() {
@@ -607,8 +629,8 @@ public class DictionaryApplication extends javax.swing.JFrame {
 
     private void jTextField1KeyReleased() {
         // TODO add your handling code here:
-        //searchFilter(jTextField1.getText());
         searchFilter(jTextField1.getText());
+        // selectlist(jTextField1.getText());
     }
 
     private void jList1ValueChanged() {
@@ -636,7 +658,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(DictionaryApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
